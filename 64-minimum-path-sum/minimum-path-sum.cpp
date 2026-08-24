@@ -9,35 +9,35 @@ public:
         vector<vector<int>> dp(m, vector<int>(n, 0));
 
         
-        dp[m-1][n-1] = grid[m-1][n-1];
+        dp[0][0] = grid[0][0];
 
       
-        for(int i = m-1; i >= 0; i--) {
+        for(int i = 0; i<m; i++) {
 
            
-            for(int j = n-1; j >= 0; j--) {
+            for(int j =0; j<n; j++) {
 
                 
-                if(i == m-1 && j == n-1)
+                if(i ==0 && j ==0)
                     continue;
 
                 int ans1 = INT_MAX;
                 int ans2 = INT_MAX;
 
                
-                if(i+1 < m) {
-                    ans1 = grid[i][j]+dp[i+1][j];
-                }
+                if(i-1>=0) {
+                    ans1 = grid[i][j]+dp[i-1][j];
+                } 
 
                 
-                if(j+1 < n) {
-                    ans2 = grid[i][j]+dp[i][j+1];
-                }
+                if(j-1>=0) {
+                    ans2 = grid[i][j]+dp[i][j-1];
+                } 
 
                 dp[i][j] =  min(ans1, ans2);
-            }
+            } 
         }
 
-        return dp[0][0];
+        return dp[m-1][n-1];
     }
 };
