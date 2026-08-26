@@ -4,43 +4,48 @@ public:
 
         int n = s.size();
 
-        vector<int> indices;
+        int i = 0;       // left
+        int j = 0;       // right
+        int cnt = 0;     // number of 1s
 
-      
-        for (int i = 0; i < n; i++) {
-            if (s[i] == '1') {
-                indices.push_back(i);
+        int bestLen = INT_MAX;
+        string ans = "";
+
+        while (j < n) {
+
+           
+            if (s[j] == '1')
+                cnt++;
+
+          
+            while (cnt == k) {
+
+                int len = j - i + 1;
+
+                string curr = s.substr(i, len);
+
+                
+                if (len < bestLen) {
+                    bestLen = len;
+                    ans = curr;
+                }
+
+              
+                else if (len == bestLen && curr < ans) {
+                    ans = curr;
+                }
+
+               
+                if (s[i] == '1')
+                    cnt--;
+
+                i++;
             }
+
+            
+            j++;
         }
 
-       
-        if (indices.size() < k)
-            return "";
-
-        int minimum = INT_MAX;
-        string finalans = "";
-
-        for (int i = 0; i + k - 1 < indices.size(); i++) {
-
-            int left = indices[i];
-            int right = indices[i + k - 1];
-
-            int len = right - left + 1;
-
-            string candidate = s.substr(left, len);
-
-            if (len < minimum) {
-
-                minimum = len;
-                finalans = candidate;
-
-            }
-            else if (len == minimum && candidate < finalans) {
-
-                finalans = candidate;
-            }
-        }
-
-        return finalans;
+        return ans;
     }
 };
