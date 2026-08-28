@@ -3,48 +3,43 @@ public:
 
     int maximum = 0;
 
-    void f(vector<string>& arr, string& ans, int i) {
+    void f(vector<string>& arr, int i, int mask, int length) {
 
+        
         if(i == arr.size()) {
-            maximum = max(maximum, (int)ans.size());
+            maximum = max(maximum, length);
             return;
         }
 
-        // Take arr[i] only if it keeps all characters unique
+       
+        f(arr, i + 1, mask, length);
+
+      
+        int newMask = mask;
         bool possible = true;
 
-        unordered_map<char,int> mp;
-
         for(char c : arr[i]) {
-            if(mp[c] > 0) {
-                possible = false;
-                break;
-            }
-            mp[c]++;
 
-            if(ans.find(c) != string::npos) {
+            int bit = 1 << (c - 'a');
+
+           
+            if(newMask & bit) {
                 possible = false;
                 break;
             }
+
+            newMask |= bit;
         }
 
+      
         if(possible) {
-            ans += arr[i];
-
-            f(arr, ans, i + 1);
-
-            ans.erase(ans.size() - arr[i].size());
+            f(arr, i + 1, newMask, length + arr[i].size());
         }
-
-        // Don't take
-        f(arr, ans, i + 1);
     }
 
     int maxLength(vector<string>& arr) {
 
-        string ans = "";
-
-        f(arr, ans, 0);
+        f(arr, 0, 0, 0);
 
         return maximum;
     }
