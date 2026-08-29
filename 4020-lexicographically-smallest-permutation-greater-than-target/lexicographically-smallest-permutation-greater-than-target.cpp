@@ -1,86 +1,70 @@
+
 class Solution {
 public:
 
-    string ans = "";
+    string result = "";
 
-    bool f(string &target, vector<int>& freq, int i, bool greater) {
+    bool solve(string& curr,
+               vector<int>& count,
+               string& target,
+               int i,
+               bool greater) {
 
-        int n = target.size();
+        // We have constructed the complete string
+        if (i == target.size()) {
 
-        // All positions are filled
-        if(i == n) {
-            return greater;
-        }
-
-        int x = target[i] - 'a';
-
-        // If we are already greater,
-        // simply take the smallest available character.
-        if(greater) {
-
-            for(int c = 0; c < 26; c++) {
-
-                if(freq[c] > 0) {
-
-                    ans += char('a' + c);
-                    freq[c]--;
-
-                    if(f(target, freq, i + 1, true))
-                        return true;
-
-                    freq[c]++;
-                    ans.pop_back();
-                }
+            if (greater) {
+                result = curr;
+                return true;
             }
 
             return false;
         }
 
-        // We are still equal to target.
-        // First try target[i].
-        if(freq[x] > 0) {
+        // Try characters in lexicographical order
+        for (char ch = 'a'; ch <= 'z'; ch++) {
 
-            ans += target[i];
-            freq[x]--;
+            if (count[ch - 'a'] == 0)
+                continue;
 
-            if(f(target, freq, i + 1, false))
+            // If we are still equal to target,
+            // we cannot choose a smaller character.
+            if (!greater && ch < target[i])
+                continue;
+
+            curr.push_back(ch);
+            count[ch - 'a']--;
+
+            // Are we greater after choosing ch?
+            bool isGreater = greater || (ch > target[i]);
+
+            // If this choice gives us a valid answer,
+            // return immediately.
+            if (solve(curr, count, target, i + 1, isGreater))
                 return true;
 
-            freq[x]++;
-            ans.pop_back();
-        }
-
-        // Matching target[i] didn't work.
-        // Try the smallest character greater than target[i].
-        for(int c = x + 1; c < 26; c++) {
-
-            if(freq[c] > 0) {
-
-                ans += char('a' + c);
-                freq[c]--;
-
-                if(f(target, freq, i + 1, true))
-                    return true;
-
-                freq[c]++;
-                ans.pop_back();
-            }
+            // Backtrack
+            curr.pop_back();
+            count[ch - 'a']++;
         }
 
         return false;
     }
 
-
     string lexGreaterPermutation(string s, string target) {
 
-        vector<int> freq(26, 0);
+        vector<int> count(26, 0);
 
-        for(char c : s)
-            freq[c - 'a']++;
+        // Count characters of s
+        for (char ch : s) {
+            count[ch - 'a']++;
+        }
 
-        if(f(target, freq, 0, false))
-            return ans;
+        string curr;
 
-        return "";
+        solve(curr, count, target, 0, false);
+
+        return result;
     }
 };
+
