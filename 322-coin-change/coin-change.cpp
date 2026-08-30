@@ -1,44 +1,18 @@
 class Solution {
 public:
-
+     int dp[13][10001];
+    int f(vector<int>&coins,int i ,int amount){
+        if(amount==0) return 0;
+        if(amount<0) return 1e9;
+        if(i>=coins.size()) return 1e9;
+        if(dp[i][amount]!=-1) return dp[i][amount];
+        int take=1+f(coins,i,amount-coins[i]);
+        int not_take=f(coins,i+1,amount);
+        return dp[i][amount]= min(take,not_take); 
+    }
     int coinChange(vector<int>& coins, int amount) {
-
-        int n = coins.size();
-        int m = 1e4;
-
-        vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
-
-        // i == n
-        // amount > 0 -> impossible
-        for(int i = 0; i <= amount; i++) {
-            dp[n][i] = 1e9;
-        }
-
-        // amount == 0 -> 0 coins
-        dp[n][0] = 0;
-
-        for(int i = n - 1; i >= 0; i--) {
-
-            for(int j = 0; j <= amount; j++) {
-
-                int ans1 = 1e9;
-
-                // Take coin
-                if(coins[i] <= j) {
-                    ans1 = min(ans1,
-                               1 + dp[i][j - coins[i]]);
-                }
-
-                // Don't take coin
-                ans1 = min(ans1, dp[i + 1][j]);
-
-                dp[i][j] = ans1;
-            }
-        }
-
-        if(dp[0][amount] == 1e9)
-            return -1;
-
-        return dp[0][amount];
+     memset(dp,-1,sizeof(dp));
+    int ans=f(coins,0,amount);
+    return (ans>=1e9)?-1:ans;      
     }
 };
