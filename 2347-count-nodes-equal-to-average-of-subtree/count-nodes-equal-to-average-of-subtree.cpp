@@ -1,42 +1,25 @@
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
 class Solution {
 public:
-    int ans=0;
-    // unordered_map<int,int>mp;
-    int f2(TreeNode* root){ 
-        if(root==NULL) return 0;  
-        int ans1=f2(root->left); 
-        int ans2=f2(root->right);
-        // mp[root->val]=1+ans1+ans2;
-        return 1+ans1+ans2;
-    }  
-    int f1(TreeNode* root){ 
-        if(root==NULL) return 0;
-        int ans1=f1(root->left);
-        int ans2=f1(root->right);
-        int total_ans=root->val+ans1+ans2;
-       
-        int take=f2(root);
-        if((total_ans)/take==root->val) ans++; 
+    int ans = 0;
 
-         
-        cout<<total_ans<<endl;  
-        return total_ans;
-    } 
+    pair<int, int> f1(TreeNode* root) {
+        if (root == NULL)
+            return {0, 0};
+
+        pair<int, int> left = f1(root->left);
+        pair<int, int> right = f1(root->right);
+
+        int total_sum = root->val + left.first + right.first;
+        int total_count = 1 + left.second + right.second;
+
+        if (total_sum / total_count == root->val)
+            ans++;
+
+        return {total_sum, total_count};
+    }
+
     int averageOfSubtree(TreeNode* root) {
-     
-      int take=f1(root);
-    
-      return ans;
+        f1(root);
+        return ans;
     }
 };
