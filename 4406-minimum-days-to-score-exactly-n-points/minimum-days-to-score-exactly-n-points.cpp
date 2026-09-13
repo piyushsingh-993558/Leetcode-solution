@@ -6,7 +6,7 @@ public:
          if(dp[n]!=-1) return dp[n];
          int ans=INT_MAX;
         for(int i=1;i<=n;i++){
-         long long  sum=i*(i+1)/2;
+        int   sum=i*(i+1)/2;
         if(sum<=n){  
           ans=min(ans,i+1+f(n-sum));    
           }else{
