@@ -8,7 +8,7 @@ public:
         int i = 0;
         int j = 1;
         int previous_element = nums[0];
-        int max_inc_count = 1;
+        int max_inc_count = INT_MIN;
 
        
         while(j < n) {
@@ -31,7 +31,7 @@ public:
         j = 1;
         previous_element = nums[0];
 
-        int max_desc_count = 1;
+        int max_desc_count = INT_MIN;
 
        
         while(j < n) {
